@@ -10,17 +10,23 @@ const Statistics = (props) => {
   if (props.stats.all === 0) {
     return <p>No Feedback given</p>
   }
-  
+
   return (
       <>
         <h1>Statistics</h1>
-        <p>Good: {props.stats.good}</p>
-        <p>Neutral: {props.stats.neutral}</p>
-        <p>Bad: {props.stats.bad}</p>
-        <p>All: {props.stats.all}</p>
-        <p>Average: {props.stats.average}</p>
-        <p>Positive: {props.stats.positive * 100} %</p>
+        <StaticsLine type="Good" stat={props.stats.good} />
+        <StaticsLine type="Neutral" stat={props.stats.neutral} />
+        <StaticsLine type="Bad" stat={props.stats.bad} />
+        <StaticsLine type="All" stat={props.stats.all} />
+        <StaticsLine type="Average" stat={props.stats.average} />
+        <StaticsLine type="Positive" stat={props.stats.positive} />
       </>
+  )
+}
+
+const StaticsLine = (props) => {
+  return (
+    <p>{props.type}: {props.stat}</p>
   )
 }
 

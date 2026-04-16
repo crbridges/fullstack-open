@@ -14,19 +14,25 @@ const Statistics = (props) => {
   return (
       <>
         <h1>Statistics</h1>
+        <table>
+          <tbody>
         <StaticsLine type="Good" stat={props.stats.good} />
         <StaticsLine type="Neutral" stat={props.stats.neutral} />
         <StaticsLine type="Bad" stat={props.stats.bad} />
         <StaticsLine type="All" stat={props.stats.all} />
         <StaticsLine type="Average" stat={props.stats.average} />
         <StaticsLine type="Positive" stat={props.stats.positive} />
+        </tbody>
+        </table>
       </>
   )
 }
 
 const StaticsLine = (props) => {
   return (
-    <p>{props.type}: {props.stat}</p>
+    <tr>
+    <td>{props.type}</td><td>{props.stat}</td>
+    </tr>
   )
 }
 

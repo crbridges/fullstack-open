@@ -4,6 +4,16 @@ const Button = (props) => {
   return <button onClick={props.onClick}>{props.text}</button>
 }
 
+const Top = (props) => {
+  return (
+    <>
+    <h1>Anecdote of the day</h1>
+    <p>{props.anecdote}</p>
+    <p>has {props.votes} votes</p>
+    </>
+  )
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -19,6 +29,7 @@ const App = () => {
 
   const [selected, setSelected] = useState(0);
   const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0));
+  const [top, setTop] = useState(0);
 
   const randInt = () =>{
     return Math.floor(Math.random() * anecdotes.length);
@@ -27,6 +38,11 @@ const App = () => {
   const addVote = () => {
     const updated_votes = [... votes];
     updated_votes[selected] += 1;
+    console.log(updated_votes)
+
+    setTop(updated_votes.indexOf(Math.max(...updated_votes)));
+    console.log(top)
+
     return updated_votes
   }
 
@@ -36,6 +52,8 @@ const App = () => {
       <p>{votes[selected]}</p>
       <Button onClick={() => {setVotes(addVote())}} text="vote" /> 
       <Button onClick={() => setSelected(randInt())} text="next anectdote" />
+
+      <Top anecdote={anecdotes[top]} votes={votes[top]}/>
     </div>
   )
 }

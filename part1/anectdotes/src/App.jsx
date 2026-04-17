@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 const Button = (props) => {
-  return <button onClick={props.onClick}>next anectdote</button>
+  return <button onClick={props.onClick}>{props.text}</button>
 }
 
 const App = () => {
@@ -15,17 +15,27 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ]
-   
-  const [selected, setSelected] = useState(0)
+
+
+  const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0));
 
   const randInt = () =>{
     return Math.floor(Math.random() * anecdotes.length);
   };
 
+  const addVote = () => {
+    const updated_votes = [... votes];
+    updated_votes[selected] += 1;
+    return updated_votes
+  }
+
   return (
     <div>
       <h1>{anecdotes[selected]}</h1>
-      <Button onClick={() => setSelected(randInt())}/>
+      <p>{votes[selected]}</p>
+      <Button onClick={() => {setVotes(addVote())}} text="vote" /> 
+      <Button onClick={() => setSelected(randInt())} text="next anectdote" />
     </div>
   )
 }

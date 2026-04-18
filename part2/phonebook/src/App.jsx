@@ -14,9 +14,13 @@ const App = () => {
 
   function addName(e) {
     e.preventDefault();
-    const newPersons = persons.concat({name: newName});
-    setPersons(newPersons);
-    console.log(newPersons);
+    const newPerson = {name: newName}
+    if (persons.some(p => p.name === newPerson.name)) {
+      alert(`${newPerson.name} is alrady in the phone book!`);
+    } else {
+      const newPersons = persons.concat(newPerson);
+      setPersons(newPersons);
+    }
   }
 
   const handleNameChange = (e) => {

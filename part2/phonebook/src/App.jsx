@@ -2,19 +2,20 @@ import { useState } from 'react'
 
 const Person = ({person}) => {
   return (
-    <p>{person.name}</p>
+    <p>{person.name} {person.number}</p>
   )
 }
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
+    { name: 'Arto Hellas', number: "12-34-56789" }
   ]) 
   const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
 
   function addName(e) {
     e.preventDefault();
-    const newPerson = {name: newName}
+    const newPerson = {name: newName, number: newNumber}
     if (persons.some(p => p.name === newPerson.name)) {
       alert(`${newPerson.name} is alrady in the phone book!`);
     } else {
@@ -24,9 +25,10 @@ const App = () => {
   }
 
   const handleNameChange = (e) => {
-    console.log(e.target.value);
     setNewName(e.target.value);
   }
+
+  const handleNewNumber = e => setNewNumber(e.target.value)
 
   return (
     <div>
@@ -34,6 +36,7 @@ const App = () => {
       <form onSubmit={addName}>
         <div>
           name: <input value={newName} onChange={handleNameChange} />
+          number: <input value={newNumber} onChange={handleNewNumber} />
         </div>
         <div>
           <button type="submit">add</button>

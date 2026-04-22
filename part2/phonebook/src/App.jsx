@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import phonebook from './services/phonebook'
+
+const DB_URL = 'http://localhost:3001/persons'
 
 const Person = ({person}) => {
   return (
@@ -41,7 +43,7 @@ const App = () => {
 
   useEffect(() => {
     console.log('effect')
-    axios.get('http://localhost:3001/persons')
+    phonebook.getAll()
       .then(response => {
         console.log(response.data)
         setPersons(response.data)
@@ -63,6 +65,10 @@ const App = () => {
     } else {
       const newPersons = persons.concat(newPerson);
       setPersons(newPersons);
+
+      phonebook
+        .create(newPerson)
+        .then(response => console.log(response))
     }
   }
 

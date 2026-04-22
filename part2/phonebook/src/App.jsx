@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react'
 import phonebook from './services/phonebook'
 import axios from 'axios'
 
-const DB_URL = 'http://localhost:3001/persons'
-
 const Person = ({person, deleteName}) => {
   return (
     <p>{person.name} {person.number} <Button deleteName={deleteName} id={person.id} /></p>
@@ -46,6 +44,23 @@ function Button({deleteName, id}) {
   )
 }
 
+function Notification({message}) {
+  if (message === null) return null
+
+  const style = {
+    color: "green",
+    border: "solid",
+    borderRadius: 5,
+    background: "lightgray",
+    padding: 15,
+    fontSize: "20px"
+  }
+
+  return (
+    <div style={style}>{message}</div>
+  )
+} 
+
 const App = () => {
 
   useEffect(() => {
@@ -63,6 +78,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
+  const [newErrorMessage, setErrorMessage] = useState(null)
 
   function addName(e) {
     e.preventDefault();
@@ -79,6 +95,12 @@ const App = () => {
       phonebook
         .create(newPerson)
         .then(response => setPersons(persons.concat(response.data)))
+
+      setErrorMessage(`Added ${newPerson.name}`)
+      setTimeout(() => setErrorMessage(null), 3000)
+
+      setNewName("")
+      setNewNumber("")
     }
   }
 
@@ -99,6 +121,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={newErrorMessage} />
       <Filter newFilter={newFilter} handleNewFilter={handleNewFilter}/>
 
       <PersonForm addName={addName} newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNewNumber={handleNewNumber} />

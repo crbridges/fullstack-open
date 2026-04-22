@@ -108,6 +108,10 @@ const App = () => {
     if (window.confirm(`Delete ${persons.find(p => p.id === id).name}?`)) {
       phonebook.deleteNumber(id)
         .then(() => setPersons(persons.filter(p => p.id != id)))
+        .catch(e => {
+          setErrorMessage(`Information of ${persons.find(p => p.id === id).name} has already been removed from server`)
+          setTimeout(() => setErrorMessage(null), 3000)
+    })
     }
   }
 

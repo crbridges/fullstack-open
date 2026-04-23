@@ -54,6 +54,10 @@ app.delete("/api/persons/:id", (req, res) => {
 app.post("/api/persons", (req, res) => {
     const id = Math.floor(Math.random() * 100001)
 
+    if (!req.body.name || !req.body.number || phonebook.find(p => p.name === req.body.name || req.body.number === p.number)) {
+        return res.status(400).json( {error: "Name and number must be unique"})
+    }
+
     phonebook = phonebook.concat({...req.body, id})
     console.log(phonebook)
     res.status(201).end()

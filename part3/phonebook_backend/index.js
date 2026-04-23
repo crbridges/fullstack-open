@@ -4,7 +4,7 @@ const app = express()
 
 app.use(express.json())
 
-const phonebook = [
+let phonebook = [
     { 
       "id": "1",
       "name": "Arto Hellas", 
@@ -33,7 +33,7 @@ app.get("/api/persons", (req, res) => {
 
 app.get("/api/persons/:id", (req, res) => {
     console.log(req.params.id)
-    const person = phonebook.find(p => p.id === req.params.id)
+    let person = phonebook.find(p => p.id === req.params.id)
     if (person) res.json(person)
     else res.status(404).end()
 })
@@ -42,6 +42,13 @@ app.get("/info", (req, res) => {
     const now = new Date()
     res.send(`Phonebook has info for ${phonebook.length} people<br>
         ${now}`)
+})
+
+app.delete("/api/persons/:id", (req, res) => {
+    phonebook = phonebook.filter(p => p.id !== req.params.id)
+
+    console.log(phonebook)
+    res.status(204).end()
 })
 
 

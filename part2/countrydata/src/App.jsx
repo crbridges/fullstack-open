@@ -3,7 +3,13 @@ import { useState, useEffect } from 'react'
 
 const country_url = 'https://studies.cs.helsinki.fi/restcountries/'
 
-const Countries = ({countries}) => {
+const Button = ({ name, handleSetSearchText }) => {
+  return (
+    <button onClick={() => handleSetSearchText(name)}>Show</button>
+  )
+}
+
+const Countries = ({countries,  handleSetSearchText}) => {
   if (countries.length === 1) {
     const country = countries[0]
     return (
@@ -19,7 +25,7 @@ const Countries = ({countries}) => {
     )
   } else if (countries.length < 10) {
     return (
-        <div>{countries.map((c, i) => <p key={i}>{c.name.common}</p>)}</div>
+        <div>{countries.map((c, i) => <p key={i}>{c.name.common} <Button name={c.name.common} handleSetSearchText={handleSetSearchText} /></p>)}</div>
     )
   } else {
     return <div>Too many matches, specify another filter.</div>
@@ -41,14 +47,20 @@ const App = () => {
 
   const handleSearchText = (e) => {
     setSearchText(e.target.value)
-    setDisplayed(countries.filter(c => c.name.common.toLowerCase().includes(e.target.value)))
+    setDisplayed(countries.filter(c => c.name.common.toLowerCase().includes(e.target.value.toLowerCase())))
+  }
+
+  const handleSetSearchText = (name) => {
+    console.log({name})
+    setSearchText(name)
+    setDisplayed(countries.filter(c => c.name.common === name))
   }
   
   return ( 
     <>
     <div>Find countries: <input value={searchText} onChange={handleSearchText}></input></div>
 
-    <Countries countries={displayed} />
+    <Countries countries={displayed} handleSetSearchText={handleSetSearchText} />
     </>
   )
 }

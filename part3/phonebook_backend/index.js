@@ -51,6 +51,14 @@ app.delete("/api/persons/:id", (req, res) => {
     res.status(204).end()
 })
 
+app.post("/api/persons", (req, res) => {
+    const id = Math.floor(Math.random() * 100001)
+
+    phonebook = phonebook.concat({...req.body, id})
+    console.log(phonebook)
+    res.status(201).end()
+})
+
 
 const PORT = '3001'
 app.listen(PORT, () => {

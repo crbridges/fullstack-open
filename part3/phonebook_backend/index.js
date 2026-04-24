@@ -1,13 +1,14 @@
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
 
 const app = express()
-
 app.use(express.json())
 morgan.token('data', function (req, res) { return JSON.stringify(req.body) })
 
 
 app.use(morgan(':method :url :status :res[content-length] :response-time ms :data'))
+app.use(cors())
 
 
 let phonebook = [
@@ -34,6 +35,7 @@ let phonebook = [
 ]
 
 app.get("/api/persons", (req, res) => {
+    console.log("getall")
     res.json(phonebook)
 })
 
@@ -58,7 +60,7 @@ app.delete("/api/persons/:id", (req, res) => {
 })
 
 app.post("/api/persons", (req, res) => {
-    const id = Math.floor(Math.random() * 100001)
+    const id = String(Math.floor(Math.random() * 100001))
 
     if (!req.body.name || !req.body.number || phonebook.find(p => p.name === req.body.name || req.body.number === p.number)) {
         return res.status(400).json( {error: "Name and number must be unique"})
@@ -66,7 +68,7 @@ app.post("/api/persons", (req, res) => {
 
     phonebook = phonebook.concat({...req.body, id})
     console.log(phonebook)
-    res.status(201).end()
+    res.status(201).json({...req.body, id})
 })
 
 

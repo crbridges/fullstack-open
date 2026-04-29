@@ -1,73 +1,58 @@
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
-// const cors = require('cors')
+const Entry = require('./models/entries')
 
 const app = express()
 app.use(express.json())
 morgan.token('data', function (req, res) { return JSON.stringify(req.body) })
 app.use(morgan(':method :url :status :res[content-length] :response-time ms :data'))
-// app.use(cors())
 app.use(express.static("dist"))
 
+let getAll = async () => {
+    return await Entry.find({})
+}
 
-let phonebook = [
-    { 
-      "id": "1",
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": "2",
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": "3",
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": "4",
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-]
-
-app.get("/api/persons", (req, res) => {
+app.get("/api/persons", async (req, res) => {
     console.log("getall")
-    res.json(phonebook)
+    // Entry.find({}).then(result => {
+    //     res.json(result)
+    // })
+    const result = await getAll();
+    res.json(result)
 })
 
 app.get("/api/persons/:id", (req, res) => {
     console.log(req.params.id)
-    let person = phonebook.find(p => p.id === req.params.id)
+    Entry.find({_id: req.params.id}).then( person => {
     if (person) res.json(person)
     else res.status(404).end()
+    })
 })
 
 app.get("/info", (req, res) => {
     const now = new Date()
-    res.send(`Phonebook has info for ${phonebook.length} people<br>
+    Entry.find({}).then(entries => {
+    res.send(`Phonebook has info for ${entries.length} people<br>
         ${now}`)
+    })
 })
 
 app.delete("/api/persons/:id", (req, res) => {
-    phonebook = phonebook.filter(p => p.id !== req.params.id)
-
-    console.log(phonebook)
-    res.status(204).end()
+    Entry.deleteOne({_id: req.params.id}).then( () => res.status(204).end())
 })
 
 app.post("/api/persons", (req, res) => {
-    const id = String(Math.floor(Math.random() * 100001))
-
-    if (!req.body.name || !req.body.number || phonebook.find(p => p.name === req.body.name || req.body.number === p.number)) {
-        return res.status(400).json( {error: "Name and number must be unique"})
+    console.log(req.body.number)
+    if (!req.body.name || !req.body.number) {
+        return res.status(400).json( {error: "Name and number are required"})
     }
+    const newEntry = new Entry({
+        name: req.body.name,
+        number: req.body.number,
+    })
 
-    phonebook = phonebook.concat({...req.body, id})
-    console.log(phonebook)
-    res.status(201).json({...req.body, id})
+    newEntry.save().then (result => { res.status(201).json(result)})
 })
 
 

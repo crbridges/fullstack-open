@@ -22,12 +22,13 @@ app.get("/api/persons", async (req, res) => {
     res.json(result)
 })
 
-app.get("/api/persons/:id", (req, res) => {
+app.get("/api/persons/:id", (req, res, next) => {
     console.log(req.params.id)
     Entry.find({_id: req.params.id}).then( person => {
     if (person) res.json(person)
     else res.status(404).end()
     })
+    .catch(error => next(error))
 })
 
 app.get("/info", (req, res) => {
@@ -38,8 +39,9 @@ app.get("/info", (req, res) => {
     })
 })
 
-app.delete("/api/persons/:id", (req, res) => {
+app.delete("/api/persons/:id", (req, res, next) => {
     Entry.deleteOne({_id: req.params.id}).then( () => res.status(204).end())
+    .catch(error => next(error))
 })
 
 app.post("/api/persons", (req, res) => {
@@ -55,6 +57,26 @@ app.post("/api/persons", (req, res) => {
     newEntry.save().then (result => { res.status(201).json(result)})
 })
 
+app.put("/api/persons/:id", (req, res, next) => {
+    Entry.findById(req.params.id)
+    .then(
+        entry => {
+            if (!entry) return res.status(404).send("no bueno")
+            entry.number = req.body.number
+            entry.save().then(updatedEntry => {
+                res.json(updatedEntry)
+            })
+        })
+    .catch(error => next(error))
+
+})
+
+app.use((error, req, res, next) => {
+    if (error.name === 'CastError') {
+        return res.status(666).send("you boofed it")
+    }
+    next(error)
+})
 
 const PORT = process.env.PORT || '3001'
 app.listen(PORT, () => {

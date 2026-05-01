@@ -44,7 +44,7 @@ app.delete("/api/persons/:id", (req, res, next) => {
     .catch(error => next(error))
 })
 
-app.post("/api/persons", (req, res) => {
+app.post("/api/persons", (req, res, next) => {
     console.log(req.body.number)
     if (!req.body.name || !req.body.number) {
         return res.status(400).json( {error: "Name and number are required"})
@@ -55,18 +55,21 @@ app.post("/api/persons", (req, res) => {
     })
 
     newEntry.save().then (result => { res.status(201).json(result)})
+    .catch(error => next(error))
 })
 
 app.put("/api/persons/:id", (req, res, next) => {
     Entry.findById(req.params.id)
     .then(
         entry => {
+            console.log(entry)
             if (!entry) return res.status(404).send("no bueno")
             entry.number = req.body.number
-            entry.save().then(updatedEntry => {
+            return entry.save()
+        })
+    .then(updatedEntry => {
                 res.json(updatedEntry)
             })
-        })
     .catch(error => next(error))
 
 })
@@ -74,7 +77,10 @@ app.put("/api/persons/:id", (req, res, next) => {
 app.use((error, req, res, next) => {
     if (error.name === 'CastError') {
         return res.status(666).send("you boofed it")
-    }
+    } 
+    if (error.name === 'ValidationError') {
+        return res.status(400).send({error: error.message})
+    } 
     next(error)
 })
 

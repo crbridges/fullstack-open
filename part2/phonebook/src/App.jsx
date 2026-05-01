@@ -90,14 +90,24 @@ const App = () => {
         phonebook
         .updateNumber(updatedPerson)
         .then(response => setPersons(persons.map(p => p.id === response.data.id ? response.data : p)))
+        .catch(error => { 
+          console.log(error.response.data.error)
+          setErrorMessage(`Person validation failed: ${error.response.data.error}`)
+          setTimeout(() => setErrorMessage(null), 3000)
+        })
       }
     } else {
       phonebook
         .create(newPerson)
-        .then(response => setPersons(persons.concat(response.data)))
-
-      setErrorMessage(`Added ${newPerson.name}`)
-      setTimeout(() => setErrorMessage(null), 3000)
+        .then(response => { setPersons(persons.concat(response.data))
+            setErrorMessage(`Added ${newPerson.name}`)
+            setTimeout(() => setErrorMessage(null), 3000)
+        })
+        .catch(error => { 
+          console.log(error.response.data.error)
+          setErrorMessage(`Person validation failed: ${error.response.data.error}`)
+          setTimeout(() => setErrorMessage(null), 3000)
+        })
 
       setNewName("")
       setNewNumber("")

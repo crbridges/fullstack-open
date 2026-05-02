@@ -77,3 +77,20 @@ describe('total likes', () => {
     assert.strictEqual(result, 36);
   })
 })
+
+describe('favorite blog', () => {
+    test('find blog with most likes', () => {
+        const result = listHelper.mostLikes(blogs);
+        assert.deepStrictEqual(result, blogs[2]);
+    })
+
+    test('when list has one one blog, equals that blog', () => {
+        const result = listHelper.mostLikes([blogs[3]]);
+        assert.deepStrictEqual(result, blogs[3]);
+    })
+
+    test('of empty list is undefined', () => {
+        const result = listHelper.mostLikes([]);
+        assert.deepStrictEqual(result, undefined)
+    })
+})

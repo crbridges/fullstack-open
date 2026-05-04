@@ -80,17 +80,17 @@ describe('total likes', () => {
 
 describe('favorite blog', () => {
     test('find blog with most likes', () => {
-        const result = listHelper.mostLikes(blogs);
+        const result = listHelper.favoriteBlog(blogs);
         assert.deepStrictEqual(result, blogs[2]);
     })
 
     test('when list has one one blog, equals that blog', () => {
-        const result = listHelper.mostLikes([blogs[3]]);
+        const result = listHelper.favoriteBlog([blogs[3]]);
         assert.deepStrictEqual(result, blogs[3]);
     })
 
     test('of empty list is undefined', () => {
-        const result = listHelper.mostLikes([]);
+        const result = listHelper.favoriteBlog([]);
         assert.deepStrictEqual(result, undefined)
     })
 })
@@ -100,6 +100,15 @@ test('find author with most blogs', () => {
     const sol = {    
         author: "Robert C. Martin",
         blogs: 3
+    }
+    assert.deepStrictEqual(result, sol)
+})
+
+test('find author with most likes', () => {
+    const result = listHelper.mostLikes(blogs);
+    const sol = {
+        author: "Edsger W. Dijkstra",
+        likes: 17
     }
     console.log(result)
     assert.deepStrictEqual(result, sol)

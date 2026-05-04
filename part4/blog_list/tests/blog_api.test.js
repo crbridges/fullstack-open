@@ -25,6 +25,11 @@ test('get returns all blogs', async () => {
     assert.strictEqual(blogs.body.length, initialBlogs.length);
 })
 
+test('verify that mongodb _id is converted to id', async () => {
+    const blogs = await api.get('/api/blogs');
+    assert.strictEqual('id' in blogs.body[0], true)
+})
+
 after(async () => {
     await mongoose.connection.close();
 })

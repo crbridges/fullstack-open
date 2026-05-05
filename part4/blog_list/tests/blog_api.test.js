@@ -67,6 +67,11 @@ describe("tests like values", () => {
 
         assert.strictEqual(result.body.likes, 0);
     })
+
+    test('test correct number of likes returned', async () => {
+        const result = await api.get('/api/blogs');
+        assert.strictEqual(result.body[0].likes, 7);
+    })
 })
 
 after(async () => {

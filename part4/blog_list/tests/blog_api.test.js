@@ -101,6 +101,28 @@ describe("tests like values", () => {
     })
 })
 
+test('test delete endpoint', () => {
+    test('test deleting an item from database', async () => {
+        await api
+            .delete(`/api/blogs/${initialBlogs[0]._id}`)
+            .expect(204)
+
+        const blogs = await api.get('/api/blogs');
+        
+        assert.strictEqual(initialBlogs.length, blogs.body.length + 1)
+    })
+
+    test ('test correct blog was deleted', async () => {
+        await api
+            .delete(`/api/blogs/${initialBlogs[3]._id}`)
+            .expect(204)
+
+        const blogs = await api.get('/api/blogs');
+
+        assert.strictEqual(blogs.body.map(blog => blog.title).includes(initialBlogs[3].title), false )
+    })
+})
+
 after(async () => {
     await mongoose.connection.close();
 })

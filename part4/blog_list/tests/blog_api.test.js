@@ -57,6 +57,18 @@ describe('test post endpoint', () => {
     })
 })
 
+describe("tests like values", () => {
+    test('test unspecified like value returns 0', async () => {
+        const newBlog = { title: 'no likes', author: 'john nobody', url: "worstblog.com"};
+
+        const result = await api
+            .post('/api/blogs/')
+            .send(newBlog);
+
+        assert.strictEqual(result.body.likes, 0);
+    })
+})
+
 after(async () => {
     await mongoose.connection.close();
 })

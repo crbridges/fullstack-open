@@ -123,6 +123,18 @@ test('test delete endpoint', () => {
     })
 })
 
+describe('test update endpoint', () => {
+    test('test updated likes', async () => {
+        const blogs = await api.get(`/api/blogs/`);
+        const originalLikes = blogs.body[1].likes
+
+        blogs.body[1].likes = blogs.body[1].likes + 5;
+        const result = await api.put(`/api/blogs/${blogs.body[1].id}`).send(blogs.body[1]).expect(200);
+
+        assert.strictEqual(originalLikes + 5, result.body.likes);
+    })
+})
+
 after(async () => {
     await mongoose.connection.close();
 })

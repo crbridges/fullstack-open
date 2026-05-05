@@ -55,6 +55,33 @@ describe('test post endpoint', () => {
         const { title, author, url, likes } = result.body
         assert.deepStrictEqual({ title, author, url, likes }, newBlog)
     })
+
+    test('test missing author returns 400', async () => {
+        const newBlog = { title: "no author", url:"noauthor.com" }
+        const result = await api
+                        .post('/api/blogs')
+                        .send(newBlog);
+        
+        assert.strictEqual(result.status, 400);
+    })
+
+    test('test missing title returns 400', async () => {
+        const newBlog = { author: "no title", url:"notitle.com" }
+        const result = await api
+                        .post('/api/blogs')
+                        .send(newBlog);
+        
+        assert.strictEqual(result.status, 400);
+    })
+
+    test('test missing url returns 400', async () => {
+        const newBlog = { title: "no url", author:"no url" }
+        const result = await api
+                        .post('/api/blogs')
+                        .send(newBlog);
+        
+        assert.strictEqual(result.status, 400);
+    })
 })
 
 describe("tests like values", () => {
